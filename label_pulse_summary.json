@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Innervisions",
+    "total_releases": 148,
+    "first_year": 2005,
+    "latest_year": 2026,
+    "distinct_artists": 71,
+    "avg_releases_per_year": 6.73
+  },
+  {
+    "label": "Keinemusik",
+    "total_releases": 69,
+    "first_year": 2009,
+    "latest_year": 2026,
+    "distinct_artists": 31,
+    "avg_releases_per_year": 3.83
+  }
+]
