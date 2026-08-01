@@ -1,6 +1,6 @@
 """
 Project 3 - Label Pulse: Innervisions vs. Keinemusik release history
-Real SQL (SQLite, CTEs + window functions) over real Discogs catalog data.
+Real SQL (CTEs + window functions) over real Discogs catalog data.
 
 Data source: Discogs public API (api.discogs.com/labels/{id}/releases), fetched live.
   - Innervisions (label id 50166): founded 2005 by Dixon & Âme

@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 /**
  * Label Pulse: Innervisions vs. Keinemusik Release History
  * ----------------------------------------------------------
- * Real SQL (SQLite, CTEs + window functions) over a real, hand-verified discography
+ * Real SQL (CTEs + window functions) over a real, hand-verified discography
  * dataset for two electronic music labels I actually listen to and DJ from.
  *
  * Data source: Discogs public API (api.discogs.com/labels/{id}/releases), full paginated
@@ -144,7 +144,7 @@ export default function LabelPulseProject() {
         <div className="text-xs uppercase tracking-wider text-zinc-500 mb-1">Project 3 · SQL + Python + Data Visualization</div>
         <h1 className="text-2xl font-bold">Label Pulse: Innervisions vs. Keinemusik</h1>
         <p className="text-sm text-zinc-400 mt-1">
-          Real SQL (SQLite, CTEs + window functions) over a real discography dataset for two labels I actually play as a DJ — release cadence, roster depth, and where the two labels' artists actually overlap.
+          Real SQL (CTEs + window functions) over a real discography dataset for two labels I actually play as a DJ — release cadence, roster depth, and where the two labels' artists actually overlap.
         </p>
       </div>
 
@@ -239,7 +239,7 @@ export default function LabelPulseProject() {
           </div>
           <div>
             <div className="text-zinc-100 font-medium mb-1">Tools</div>
-            <p>Python (data collection + cleaning), SQLite (CTEs, JOINs, RANK() window function), hand-built SVG visualization — same toolchain as Project 2, applied to a domain I actually care about outside of school.</p>
+            <p>Python (data collection + cleaning), SQL (CTEs, JOINs, RANK() window function), hand-built SVG visualization — same toolchain as Project 2, applied to a domain I actually care about outside of school.</p>
           </div>
         </div>
       )}

@@ -19,7 +19,7 @@ the same release, so raw pulls (617 + 141 rows) were collapsed down to one row p
 
 ## Method
 
-`build_label_pulse.py` loads both CSVs into SQLite and runs real SQL:
+`build_label_pulse.py` loads both CSVs into a local SQL database and runs real SQL:
 
 - A CTE aggregates releases per label per year, then a `SUM() OVER (PARTITION BY label ORDER BY year)`
   window function computes a running cumulative total.
@@ -58,5 +58,5 @@ Methodology (data sources, SQL approach, limitations above).
 
 ## Tools
 
-Python, SQLite (CTEs, JOINs, RANK() and SUM() OVER window functions), hand-rolled SVG for the
+Python, SQL (CTEs, JOINs, RANK() and SUM() OVER window functions), hand-rolled SVG for the
 cadence chart and roster bars.
