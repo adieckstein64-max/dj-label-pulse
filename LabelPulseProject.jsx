@@ -68,95 +68,29 @@ const SUMMARY = [
 const LABEL_COLOR = { Innervisions: "#3b82f6", Keinemusik: "#f59e0b" };
 
 /**
- * Engagement + earnings extension (added after the original three tabs shipped).
- * Two very different kinds of data live in the constants below -- keep that
- * distinction in mind whenever adding to either one:
- *
- * ENGAGEMENT (real data): Discogs' public `community.have`/`community.want` counts,
- * fetched live per top-artist release via api.discogs.com/releases/{id}. This is a
- * genuine collector-demand signal -- NOT a streaming-listen count, which no platform
- * publishes for arbitrary artists without a developer key. Framed as "collector
- * demand" everywhere it's shown, never as "listens."
- *
- * EARNINGS_ESTIMATE (illustrative model, not real data): no public API exists for
- * artist touring earnings (Bandsintown returns 403 for an unregistered app_id;
- * Songkick closed public signups years ago -- both checked directly before deciding
- * to model this instead of faking it). Each artist is bucketed into a touring tier by
- * their real release rank within their label, and each tier carries a stated,
- * documented assumption for shows/year, ticket price, venue capacity, and sellout
- * rate (TOURING_TIERS below). Every figure downstream of this is a modeled estimate,
- * not a claim about real earnings.
+ * Editorial background on each label — real facts (founding story, founders,
+ * sound), not generated from the Discogs data itself. Sourced from label/press
+ * coverage (Innervisions' own About page + Mixmag; Keinemusik's Wikipedia entry
+ * + Forbes/Crack Magazine profiles) specifically so this tab isn't just the
+ * same numbers restated in prose.
  */
-const ENGAGEMENT = [
-  { label: "Innervisions", artist: "Âme", releases_sampled: 21, discogs_have_total: 9864, discogs_want_total: 6907, collector_demand_index: 16771 },
-  { label: "Innervisions", artist: "Recondite", releases_sampled: 5, discogs_have_total: 2450, discogs_want_total: 2105, collector_demand_index: 4555 },
-  { label: "Innervisions", artist: "Frankey & Sandrino", releases_sampled: 10, discogs_have_total: 2490, discogs_want_total: 1869, collector_demand_index: 4359 },
-  { label: "Innervisions", artist: "Trikk", releases_sampled: 14, discogs_have_total: 965, discogs_want_total: 670, collector_demand_index: 1635 },
-  { label: "Innervisions", artist: "Marcus Worgull", releases_sampled: 5, discogs_have_total: 1883, discogs_want_total: 791, collector_demand_index: 2674 },
-  { label: "Innervisions", artist: "Toto Chiavetta", releases_sampled: 5, discogs_have_total: 510, discogs_want_total: 205, collector_demand_index: 715 },
-  { label: "Innervisions", artist: "Jimi Jules", releases_sampled: 11, discogs_have_total: 566, discogs_want_total: 293, collector_demand_index: 859 },
-  { label: "Innervisions", artist: "Tokyo Black Star", releases_sampled: 8, discogs_have_total: 2157, discogs_want_total: 787, collector_demand_index: 2944 },
-  { label: "Keinemusik", artist: "&ME", releases_sampled: 9, discogs_have_total: 1869, discogs_want_total: 884, collector_demand_index: 2753 },
-  { label: "Keinemusik", artist: "Rampa", releases_sampled: 10, discogs_have_total: 1888, discogs_want_total: 944, collector_demand_index: 2832 },
-  { label: "Keinemusik", artist: "Adam Port", releases_sampled: 8, discogs_have_total: 1177, discogs_want_total: 817, collector_demand_index: 1994 },
-  { label: "Keinemusik", artist: "David Mayer", releases_sampled: 7, discogs_have_total: 691, discogs_want_total: 190, collector_demand_index: 881 },
-  { label: "Keinemusik", artist: "NR&", releases_sampled: 2, discogs_have_total: 223, discogs_want_total: 75, collector_demand_index: 298 },
-  { label: "Keinemusik", artist: "&Me", releases_sampled: 4, discogs_have_total: 1077, discogs_want_total: 648, collector_demand_index: 1725 },
-  { label: "Keinemusik", artist: "Keinemusik", releases_sampled: 5, discogs_have_total: 1419, discogs_want_total: 969, collector_demand_index: 2388 },
-  { label: "Keinemusik", artist: "Reznik & Mikesh", releases_sampled: 3, discogs_have_total: 376, discogs_want_total: 87, collector_demand_index: 463 },
-];
-
-const TOURING_TIERS = {
-  A: { rnk_max: 2, shows_per_year: 45, avg_ticket_usd: 70, avg_capacity: 1800, sellout_rate: 0.65 },
-  B: { rnk_max: 4, shows_per_year: 30, avg_ticket_usd: 50, avg_capacity: 900, sellout_rate: 0.60 },
-  C: { rnk_max: 99, shows_per_year: 15, avg_ticket_usd: 35, avg_capacity: 400, sellout_rate: 0.55 },
-};
-
-const EARNINGS_ESTIMATE = [
-  { label: "Innervisions", artist: "Âme", release_rank: 1, release_count: 11, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
-  { label: "Innervisions", artist: "Trikk", release_rank: 2, release_count: 6, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
-  { label: "Innervisions", artist: "Frankey & Sandrino", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
-  { label: "Innervisions", artist: "Marcus Worgull", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
-  { label: "Innervisions", artist: "Tokyo Black Star", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
-  { label: "Innervisions", artist: "Toto Chiavetta", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
-  { label: "Innervisions", artist: "Jimi Jules", release_rank: 7, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Innervisions", artist: "Recondite", release_rank: 7, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Keinemusik", artist: "Rampa", release_rank: 1, release_count: 9, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
-  { label: "Keinemusik", artist: "Adam Port", release_rank: 2, release_count: 8, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
-  { label: "Keinemusik", artist: "&ME", release_rank: 3, release_count: 7, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
-  { label: "Keinemusik", artist: "David Mayer", release_rank: 4, release_count: 6, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
-  { label: "Keinemusik", artist: "Keinemusik", release_rank: 5, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Keinemusik", artist: "&Me", release_rank: 6, release_count: 3, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Keinemusik", artist: "Reznik & Mikesh", release_rank: 6, release_count: 3, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Keinemusik", artist: "NR&", release_rank: 8, release_count: 2, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-];
-
-// Combines the real (collector_demand_index) and modeled (estimated_annual_live_revenue_usd)
-// signals against real release_count, for the "does release frequency track with anything"
-// question. n=16 (top artists across both labels) -- far too small to claim a real
-// correlation; read these as directional, not findings.
-const RELEASE_IMPACT = {
-  n: 16,
-  pearson_release_count_vs_collector_demand: 0.666,
-  pearson_release_count_vs_estimated_revenue: 0.841,
-  rows: [
-    { label: "Innervisions", artist: "Âme", release_count: 11, collector_demand_index: 16771, estimated_annual_live_revenue_usd: 3685500 },
-    { label: "Innervisions", artist: "Trikk", release_count: 6, collector_demand_index: 1635, estimated_annual_live_revenue_usd: 3685500 },
-    { label: "Innervisions", artist: "Frankey & Sandrino", release_count: 5, collector_demand_index: 4359, estimated_annual_live_revenue_usd: 810000 },
-    { label: "Innervisions", artist: "Marcus Worgull", release_count: 5, collector_demand_index: 2674, estimated_annual_live_revenue_usd: 810000 },
-    { label: "Innervisions", artist: "Tokyo Black Star", release_count: 5, collector_demand_index: 2944, estimated_annual_live_revenue_usd: 810000 },
-    { label: "Innervisions", artist: "Toto Chiavetta", release_count: 5, collector_demand_index: 715, estimated_annual_live_revenue_usd: 810000 },
-    { label: "Innervisions", artist: "Jimi Jules", release_count: 4, collector_demand_index: 859, estimated_annual_live_revenue_usd: 115500 },
-    { label: "Innervisions", artist: "Recondite", release_count: 4, collector_demand_index: 4555, estimated_annual_live_revenue_usd: 115500 },
-    { label: "Keinemusik", artist: "Rampa", release_count: 9, collector_demand_index: 2832, estimated_annual_live_revenue_usd: 3685500 },
-    { label: "Keinemusik", artist: "Adam Port", release_count: 8, collector_demand_index: 1994, estimated_annual_live_revenue_usd: 3685500 },
-    { label: "Keinemusik", artist: "&ME", release_count: 7, collector_demand_index: 2753, estimated_annual_live_revenue_usd: 810000 },
-    { label: "Keinemusik", artist: "David Mayer", release_count: 6, collector_demand_index: 881, estimated_annual_live_revenue_usd: 810000 },
-    { label: "Keinemusik", artist: "Keinemusik", release_count: 4, collector_demand_index: 2388, estimated_annual_live_revenue_usd: 115500 },
-    { label: "Keinemusik", artist: "&Me", release_count: 3, collector_demand_index: 1725, estimated_annual_live_revenue_usd: 115500 },
-    { label: "Keinemusik", artist: "Reznik & Mikesh", release_count: 3, collector_demand_index: 463, estimated_annual_live_revenue_usd: 115500 },
-    { label: "Keinemusik", artist: "NR&", release_count: 2, collector_demand_index: 298, estimated_annual_live_revenue_usd: 115500 },
-  ],
+const LABEL_INFO = {
+  Innervisions: {
+    tag: "Berlin · founded 2005",
+    founders: "Dixon (Steffen Berkhahn), Frank Wiedemann & Kristian Beyer (Âme)",
+    story:
+      "Kristian ran a record store in Karlsruhe called Plattentasche — that's where he met Frank and they started making music together as Âme. Dixon connected with them over shared taste, Kristian shut the store and moved to Berlin, and Innervisions was born as a Sonar Kollektiv sub-label before going fully independent in 2006.",
+    sound:
+      "Deep, spellbinding house and techno, released in small, deliberate batches — every record wrapped in art-directed packaging. Mixmag credits the label with \"an astounding influence on the global house scene.\"",
+  },
+  Keinemusik: {
+    tag: "Berlin · founded 2009",
+    founders: "Adam Port, &ME & Rampa, later joined by Reznik",
+    story:
+      "&ME and Rampa met interning at a Berlin production studio, pulling night shifts on borrowed gear. Forming a collective was Rampa's idea — the group came together properly in 2009 once Reznik relocated to Berlin. The name \"Keinemusik\" translates to \"no music,\" a wink at refusing to sit inside one genre.",
+    sound:
+      "The self-described \"Keinemusik wave\" — house, disco, techno, hip-hop and Afrobeats folded into something constantly shifting but rooted in an Afrocentric, progressive sensibility. It's since filled Ibiza's Circo Loco and turned up on the Grand Theft Auto radio.",
+  },
 };
 
 function fmtCompact(n) {
@@ -212,14 +146,17 @@ function CadenceChart() {
   );
 }
 
-function RosterBars({ labelName }) {
+function RosterBars({ labelName, highlight }) {
   const rows = TOP_ARTISTS.filter((a) => a.label === labelName).sort((a, b) => b.release_count - a.release_count);
   const max = rows[0]?.release_count || 1;
   return (
     <div className="space-y-1.5">
       {rows.map((r) => (
         <div key={r.artist} className="flex items-center gap-2 text-xs">
-          <div className="w-32 truncate text-zinc-400">{r.artist}</div>
+          <div className={`w-32 truncate ${r.artist === highlight ? "text-zinc-100 font-medium" : "text-zinc-400"}`}>
+            {r.artist}
+            {r.artist === highlight && <span className="text-teal-400 ml-1">●</span>}
+          </div>
           <div className="flex-1 bg-zinc-900 rounded h-4 overflow-hidden">
             <div
               className="h-4 rounded"
@@ -233,95 +170,20 @@ function RosterBars({ labelName }) {
   );
 }
 
-function DemandBars({ labelName }) {
-  const rows = ENGAGEMENT.filter((a) => a.label === labelName).sort((a, b) => b.collector_demand_index - a.collector_demand_index);
-  const max = rows[0]?.collector_demand_index || 1;
+function LabelCard({ name }) {
+  const info = LABEL_INFO[name];
+  const color = LABEL_COLOR[name];
   return (
-    <div className="space-y-1.5">
-      {rows.map((r) => (
-        <div key={r.artist} className="flex items-center gap-2 text-xs">
-          <div className="w-32 truncate text-zinc-400">{r.artist}</div>
-          <div className="flex-1 bg-zinc-900 rounded h-4 overflow-hidden">
-            <div
-              className="h-4 rounded"
-              style={{ width: `${(r.collector_demand_index / max) * 100}%`, background: LABEL_COLOR[labelName] }}
-            />
-          </div>
-          <div className="w-14 text-right text-zinc-400">{r.collector_demand_index.toLocaleString()}</div>
-        </div>
-      ))}
+    <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-5" style={{ borderTop: `3px solid ${color}` }}>
+      <div className="text-xs uppercase tracking-wide text-zinc-500 mb-2">{info.tag}</div>
+      <h3 className="text-lg font-semibold text-zinc-100 mb-1">{name}</h3>
+      <div className="text-xs text-zinc-400 mb-3">{info.founders}</div>
+      <p className="text-sm text-zinc-400 leading-relaxed mb-3">{info.story}</p>
+      <div className="rounded-md bg-zinc-950/60 border border-zinc-800 p-3">
+        <div className="text-[10px] uppercase tracking-wide text-zinc-500 mb-1">Sound</div>
+        <p className="text-xs text-zinc-300 leading-relaxed">{info.sound}</p>
+      </div>
     </div>
-  );
-}
-
-function EarningsBars({ labelName }) {
-  const rows = EARNINGS_ESTIMATE.filter((a) => a.label === labelName).sort((a, b) => b.estimated_annual_live_revenue_usd - a.estimated_annual_live_revenue_usd);
-  const max = rows[0]?.estimated_annual_live_revenue_usd || 1;
-  const patternId = `hatch-${labelName}`;
-  const width = 300, rowH = 22, labelW = 128, valueW = 44;
-  const barMaxW = width - labelW - valueW;
-  const height = rows.length * rowH;
-
-  return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto" role="img" aria-label={`Estimated annual live-show revenue by artist, ${labelName} (modeled, not real earnings)`}>
-      <defs>
-        <pattern id={patternId} width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
-          <rect width="6" height="6" fill={LABEL_COLOR[labelName]} />
-          <line x1="0" y1="0" x2="0" y2="6" stroke="#18181b" strokeWidth="2.5" />
-        </pattern>
-      </defs>
-      {rows.map((r, i) => {
-        const y = i * rowH;
-        const barH = 14;
-        const barY = y + (rowH - barH) / 2;
-        const barW = Math.max((r.estimated_annual_live_revenue_usd / max) * barMaxW, 3);
-        return (
-          <g key={r.artist}>
-            <text x={labelW - 8} y={y + rowH / 2 + 3} fontSize="10" fill="#a1a1aa" textAnchor="end">{r.artist}</text>
-            <rect x={labelW} y={barY} width={barMaxW} height={barH} rx="3" fill="#18181b" />
-            <rect x={labelW} y={barY} width={barW} height={barH} rx="3" fill={`url(#${patternId})`} />
-            <text x={labelW + barMaxW + valueW - 2} y={y + rowH / 2 + 3} fontSize="10" fill="#a1a1aa" textAnchor="end">{fmtCompact(r.estimated_annual_live_revenue_usd)}</text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
-function ImpactScatter() {
-  const w = 640, h = 300, pad = 48;
-  const rows = RELEASE_IMPACT.rows;
-  const xMax = Math.max(...rows.map((r) => r.release_count)) + 1;
-  const yMax = Math.max(...rows.map((r) => r.collector_demand_index)) * 1.08;
-  const x = (v) => pad + (v / xMax) * (w - pad * 1.5);
-  const y = (v) => h - pad - (v / yMax) * (h - pad * 1.6);
-
-  // simple OLS trend line, computed from the same 16 rows plotted -- shown as a
-  // faint reference only, not a claim of statistical significance (n=16)
-  const n = rows.length;
-  const mx = rows.reduce((s, r) => s + r.release_count, 0) / n;
-  const my = rows.reduce((s, r) => s + r.collector_demand_index, 0) / n;
-  const slope = rows.reduce((s, r) => s + (r.release_count - mx) * (r.collector_demand_index - my), 0) /
-    rows.reduce((s, r) => s + (r.release_count - mx) ** 2, 0);
-  const intercept = my - slope * mx;
-
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" role="img" aria-label="Release count vs. collector demand index, per top artist">
-      <line x1={pad} y1={h - pad} x2={w - pad * 0.4} y2={h - pad} stroke="#3f3f46" strokeWidth="1" />
-      <line x1={pad} y1={pad * 0.4} x2={pad} y2={h - pad} stroke="#3f3f46" strokeWidth="1" />
-      {Array.from({ length: xMax }, (_, i) => i + 1).filter((v) => v % 2 === 0 || xMax < 8).map((v) => (
-        <text key={v} x={x(v)} y={h - pad + 16} fill="#71717a" fontSize="9" textAnchor="middle">{v}</text>
-      ))}
-      {[0, yMax / 2, yMax].map((v) => (
-        <text key={v} x={pad - 8} y={y(v) + 3} fill="#71717a" fontSize="9" textAnchor="end">{Math.round(v).toLocaleString()}</text>
-      ))}
-      <line x1={x(0)} y1={y(intercept)} x2={x(xMax)} y2={y(intercept + slope * xMax)} stroke="#52525b" strokeWidth="1.5" strokeDasharray="4 3" />
-      {rows.map((r) => (
-        <circle key={`${r.label}-${r.artist}`} cx={x(r.release_count)} cy={y(r.collector_demand_index)} r={5} fill={LABEL_COLOR[r.label]} fillOpacity="0.85" />
-      ))}
-      <text x={pad} y={16} fill="#a1a1aa" fontSize="10">collector demand index</text>
-      <text x={w - pad * 0.4} y={h - pad + 34} fill="#71717a" fontSize="10" textAnchor="end">releases (per artist, on this label)</text>
-    </svg>
   );
 }
 
@@ -338,14 +200,14 @@ export default function LabelPulseProject() {
         </p>
       </div>
 
-      <div className="flex gap-1 px-6 pt-4 border-b border-zinc-800">
-        {["overview", "roster", "engagement", "methodology"].map((t) => (
+      <div className="flex gap-1 px-6 pt-4 border-b border-zinc-800 overflow-x-auto">
+        {["overview", "roster", "labels", "engagement", "methodology"].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`px-3 py-2 text-sm rounded-t-md ${tab === t ? "bg-zinc-900 text-zinc-100 border border-zinc-800 border-b-0" : "text-zinc-500 hover:text-zinc-300"}`}
+            className={`px-3 py-2 text-sm rounded-t-md whitespace-nowrap ${tab === t ? "bg-zinc-900 text-zinc-100 border border-zinc-800 border-b-0" : "text-zinc-500 hover:text-zinc-300"}`}
           >
-            {t[0].toUpperCase() + t.slice(1)}
+            {t === "labels" ? "The Labels" : t[0].toUpperCase() + t.slice(1)}
           </button>
         ))}
       </div>
@@ -376,9 +238,11 @@ export default function LabelPulseProject() {
             Innervisions runs at roughly double Keinemusik's output (6.7 vs. 3.8 releases/year on average) and peaked
             in 2014 at 12 releases. Both labels show a real dip in 2021-2022 — plausibly touring/DJ schedules
             recovering post-pandemic and eating into studio time, though the data can't confirm cause, only the
-            pattern. The one genuinely interesting cross-label find: <strong>Rampa</strong>, a Keinemusik co-founder,
-            has also released directly on Innervisions ("Hall Of Violence EP," 2017; "They Will EP," 2019) — a real
-            example of the Berlin/Cologne deep-house scene's overlapping rosters, not something I assumed going in.
+            pattern. The one genuinely interesting cross-label find — <strong>Rampa</strong>, a Keinemusik co-founder,
+            also releasing directly on Innervisions — gets its own writeup, with the label backstories, on{" "}
+            <button onClick={() => setTab("labels")} className="text-zinc-200 underline decoration-zinc-600 underline-offset-2 hover:text-white">
+              The Labels tab
+            </button>.
           </p>
         </div>
       )}
@@ -391,12 +255,45 @@ export default function LabelPulseProject() {
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <div className="text-xs uppercase tracking-wide text-zinc-500 mb-2">Innervisions</div>
-              <RosterBars labelName="Innervisions" />
+              <RosterBars labelName="Innervisions" highlight="Jimi Jules" />
             </div>
             <div>
               <div className="text-xs uppercase tracking-wide text-zinc-500 mb-2">Keinemusik</div>
-              <RosterBars labelName="Keinemusik" />
+              <RosterBars labelName="Keinemusik" highlight="Rampa" />
             </div>
+          </div>
+          <div className="text-xs text-zinc-500">
+            <span className="text-teal-400">●</span> marks an artist called out on The Labels tab — Jimi Jules on Innervisions, and Rampa on Keinemusik (and, as it turns out, on Innervisions too).
+          </div>
+        </div>
+      )}
+
+      {tab === "labels" && (
+        <div className="p-6 space-y-6">
+          <div className="grid md:grid-cols-2 gap-5">
+            <LabelCard name="Innervisions" />
+            <LabelCard name="Keinemusik" />
+          </div>
+
+          <div className="rounded-lg border border-teal-900/50 bg-gradient-to-b from-teal-950/20 to-zinc-900/40 p-5">
+            <div className="text-xs uppercase tracking-wide text-teal-400 font-medium mb-2">Found in the data, not assumed going in</div>
+            <h3 className="text-base font-semibold text-zinc-100 mb-2">Rampa is the bridge between both labels</h3>
+            <p className="text-sm text-zinc-400 leading-relaxed mb-3">
+              Rampa — Keinemusik co-founder and the label's single most prolific artist with 9 releases — also put out
+              two EPs directly on Innervisions: <em>Hall Of Violence EP</em> (2017) and <em>They Will EP</em> (2019). Two
+              Berlin labels with almost no roster overlap, and the one artist who bridges them turns out to be a
+              co-founder of one of them.
+            </p>
+            <div className="flex items-center gap-2 text-xs mb-4">
+              <span className="px-2.5 py-1 rounded-full font-medium" style={{ background: "#f59e0b22", color: "#f59e0b" }}>Keinemusik · co-founder</span>
+              <span className="text-zinc-500">— released on →</span>
+              <span className="px-2.5 py-1 rounded-full font-medium" style={{ background: "#3b82f622", color: "#3b82f6" }}>Innervisions · 2017 &amp; 2019</span>
+            </div>
+            <p className="text-xs text-zinc-500 leading-relaxed border-l-2 border-teal-700/60 pl-3">
+              I'm a DJ myself, and Rampa and Jimi Jules (Innervisions, 4 releases) are two of the artists I most admire —
+              finding this connection in a self-run SQL query, rather than already knowing it, was the best part of
+              building this project.
+            </p>
           </div>
         </div>
       )}
@@ -491,11 +388,25 @@ export default function LabelPulseProject() {
               release counts is a data-cutoff artifact, not evidence of a real slowdown — I'm flagging that instead
               of letting the chart imply something it can't support.
             </p>
-            <p>
+            <p className="mb-2">
               One real data quirk worth naming: Innervisions catalog number IV109 is dated 2026 in Discogs despite
               being numbered before IV110-IV116, which are dated 2024-2025 — catalog numbers on this label aren't
               strictly chronological, so year-based analysis (used here) is more reliable than reading the catalog
               number as a timeline.
+            </p>
+            <p>
+              The roster query also returns <strong>&amp;ME</strong> and <strong>&amp;Me</strong> as two separate
+              Keinemusik artists, 3 releases apart — a casing artifact in the source data, left visible on the Roster
+              tab rather than silently merged.
+            </p>
+          </div>
+          <div>
+            <div className="text-zinc-100 font-medium mb-1">The Labels tab</div>
+            <p>
+              Founding story, founders, and sound description for each label are the one part of this project that
+              isn't derived from the SQL — sourced from the labels' own About pages and press coverage (Mixmag,
+              Forbes, Crack Magazine, Wikipedia) specifically so that tab reads as an actual profile of the labels,
+              not the same release numbers restated in prose.
             </p>
           </div>
           <div>
@@ -578,3 +489,161 @@ export default function LabelPulseProject() {
     </div>
   );
 }
+
+function DemandBars({ labelName }) {
+  const rows = ENGAGEMENT.filter((a) => a.label === labelName).sort((a, b) => b.collector_demand_index - a.collector_demand_index);
+  const max = rows[0]?.collector_demand_index || 1;
+  return (
+    <div className="space-y-1.5">
+      {rows.map((r) => (
+        <div key={r.artist} className="flex items-center gap-2 text-xs">
+          <div className="w-32 truncate text-zinc-400">{r.artist}</div>
+          <div className="flex-1 bg-zinc-900 rounded h-4 overflow-hidden">
+            <div
+              className="h-4 rounded"
+              style={{ width: `${(r.collector_demand_index / max) * 100}%`, background: LABEL_COLOR[labelName] }}
+            />
+          </div>
+          <div className="w-14 text-right text-zinc-400">{r.collector_demand_index.toLocaleString()}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EarningsBars({ labelName }) {
+  const rows = EARNINGS_ESTIMATE.filter((a) => a.label === labelName).sort((a, b) => b.estimated_annual_live_revenue_usd - a.estimated_annual_live_revenue_usd);
+  const max = rows[0]?.estimated_annual_live_revenue_usd || 1;
+  const patternId = `hatch-${labelName}`;
+  const width = 300, rowH = 22, labelW = 128, valueW = 44;
+  const barMaxW = width - labelW - valueW;
+  const height = rows.length * rowH;
+
+  return (
+    <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto" role="img" aria-label={`Estimated annual live-show revenue by artist, ${labelName} (modeled, not real earnings)`}>
+      <defs>
+        <pattern id={patternId} width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+          <rect width="6" height="6" fill={LABEL_COLOR[labelName]} />
+          <line x1="0" y1="0" x2="0" y2="6" stroke="#18181b" strokeWidth="2.5" />
+        </pattern>
+      </defs>
+      {rows.map((r, i) => {
+        const y = i * rowH;
+        const barH = 14;
+        const barY = y + (rowH - barH) / 2;
+        const barW = Math.max((r.estimated_annual_live_revenue_usd / max) * barMaxW, 3);
+        return (
+          <g key={r.artist}>
+            <text x={labelW - 8} y={y + rowH / 2 + 3} fontSize="10" fill="#a1a1aa" textAnchor="end">{r.artist}</text>
+            <rect x={labelW} y={barY} width={barMaxW} height={barH} rx="3" fill="#18181b" />
+            <rect x={labelW} y={barY} width={barW} height={barH} rx="3" fill={`url(#${patternId})`} />
+            <text x={labelW + barMaxW + valueW - 2} y={y + rowH / 2 + 3} fontSize="10" fill="#a1a1aa" textAnchor="end">{fmtCompact(r.estimated_annual_live_revenue_usd)}</text>
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+function ImpactScatter() {
+  const w = 640, h = 300, pad = 48;
+  const rows = RELEASE_IMPACT.rows;
+  const xMax = Math.max(...rows.map((r) => r.release_count)) + 1;
+  const yMax = Math.max(...rows.map((r) => r.collector_demand_index)) * 1.08;
+  const x = (v) => pad + (v / xMax) * (w - pad * 1.5);
+  const y = (v) => h - pad - (v / yMax) * (h - pad * 1.6);
+
+  const n = rows.length;
+  const mx = rows.reduce((s, r) => s + r.release_count, 0) / n;
+  const my = rows.reduce((s, r) => s + r.collector_demand_index, 0) / n;
+  const slope = rows.reduce((s, r) => s + (r.release_count - mx) * (r.collector_demand_index - my), 0) /
+    rows.reduce((s, r) => s + (r.release_count - mx) ** 2, 0);
+  const intercept = my - slope * mx;
+
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-auto" role="img" aria-label="Release count vs. collector demand index, per top artist">
+      <line x1={pad} y1={h - pad} x2={w - pad * 0.4} y2={h - pad} stroke="#3f3f46" strokeWidth="1" />
+      <line x1={pad} y1={pad * 0.4} x2={pad} y2={h - pad} stroke="#3f3f46" strokeWidth="1" />
+      {Array.from({ length: xMax }, (_, i) => i + 1).filter((v) => v % 2 === 0 || xMax < 8).map((v) => (
+        <text key={v} x={x(v)} y={h - pad + 16} fill="#71717a" fontSize="9" textAnchor="middle">{v}</text>
+      ))}
+      {[0, yMax / 2, yMax].map((v) => (
+        <text key={v} x={pad - 8} y={y(v) + 3} fill="#71717a" fontSize="9" textAnchor="end">{Math.round(v).toLocaleString()}</text>
+      ))}
+      <line x1={x(0)} y1={y(intercept)} x2={x(xMax)} y2={y(intercept + slope * xMax)} stroke="#52525b" strokeWidth="1.5" strokeDasharray="4 3" />
+      {rows.map((r) => (
+        <circle key={`${r.label}-${r.artist}`} cx={x(r.release_count)} cy={y(r.collector_demand_index)} r={5} fill={LABEL_COLOR[r.label]} fillOpacity="0.85" />
+      ))}
+      <text x={pad} y={16} fill="#a1a1aa" fontSize="10">collector demand index</text>
+      <text x={w - pad * 0.4} y={h - pad + 34} fill="#71717a" fontSize="10" textAnchor="end">releases (per artist, on this label)</text>
+    </svg>
+  );
+}
+
+const ENGAGEMENT = [
+  { label: "Innervisions", artist: "Âme", releases_sampled: 21, discogs_have_total: 9864, discogs_want_total: 6907, collector_demand_index: 16771 },
+  { label: "Innervisions", artist: "Recondite", releases_sampled: 5, discogs_have_total: 2450, discogs_want_total: 2105, collector_demand_index: 4555 },
+  { label: "Innervisions", artist: "Frankey & Sandrino", releases_sampled: 10, discogs_have_total: 2490, discogs_want_total: 1869, collector_demand_index: 4359 },
+  { label: "Innervisions", artist: "Trikk", releases_sampled: 14, discogs_have_total: 965, discogs_want_total: 670, collector_demand_index: 1635 },
+  { label: "Innervisions", artist: "Marcus Worgull", releases_sampled: 5, discogs_have_total: 1883, discogs_want_total: 791, collector_demand_index: 2674 },
+  { label: "Innervisions", artist: "Toto Chiavetta", releases_sampled: 5, discogs_have_total: 510, discogs_want_total: 205, collector_demand_index: 715 },
+  { label: "Innervisions", artist: "Jimi Jules", releases_sampled: 11, discogs_have_total: 566, discogs_want_total: 293, collector_demand_index: 859 },
+  { label: "Innervisions", artist: "Tokyo Black Star", releases_sampled: 8, discogs_have_total: 2157, discogs_want_total: 787, collector_demand_index: 2944 },
+  { label: "Keinemusik", artist: "&ME", releases_sampled: 9, discogs_have_total: 1869, discogs_want_total: 884, collector_demand_index: 2753 },
+  { label: "Keinemusik", artist: "Rampa", releases_sampled: 10, discogs_have_total: 1888, discogs_want_total: 944, collector_demand_index: 2832 },
+  { label: "Keinemusik", artist: "Adam Port", releases_sampled: 8, discogs_have_total: 1177, discogs_want_total: 817, collector_demand_index: 1994 },
+  { label: "Keinemusik", artist: "David Mayer", releases_sampled: 7, discogs_have_total: 691, discogs_want_total: 190, collector_demand_index: 881 },
+  { label: "Keinemusik", artist: "NR&", releases_sampled: 2, discogs_have_total: 223, discogs_want_total: 75, collector_demand_index: 298 },
+  { label: "Keinemusik", artist: "&Me", releases_sampled: 4, discogs_have_total: 1077, discogs_want_total: 648, collector_demand_index: 1725 },
+  { label: "Keinemusik", artist: "Keinemusik", releases_sampled: 5, discogs_have_total: 1419, discogs_want_total: 969, collector_demand_index: 2388 },
+  { label: "Keinemusik", artist: "Reznik & Mikesh", releases_sampled: 3, discogs_have_total: 376, discogs_want_total: 87, collector_demand_index: 463 },
+];
+
+const TOURING_TIERS = {
+  A: { rnk_max: 2, shows_per_year: 45, avg_ticket_usd: 70, avg_capacity: 1800, sellout_rate: 0.65 },
+  B: { rnk_max: 4, shows_per_year: 30, avg_ticket_usd: 50, avg_capacity: 900, sellout_rate: 0.60 },
+  C: { rnk_max: 99, shows_per_year: 15, avg_ticket_usd: 35, avg_capacity: 400, sellout_rate: 0.55 },
+};
+
+const EARNINGS_ESTIMATE = [
+  { label: "Innervisions", artist: "Âme", release_rank: 1, release_count: 11, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
+  { label: "Innervisions", artist: "Trikk", release_rank: 2, release_count: 6, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
+  { label: "Innervisions", artist: "Frankey & Sandrino", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
+  { label: "Innervisions", artist: "Marcus Worgull", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
+  { label: "Innervisions", artist: "Tokyo Black Star", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
+  { label: "Innervisions", artist: "Toto Chiavetta", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
+  { label: "Innervisions", artist: "Jimi Jules", release_rank: 7, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
+  { label: "Innervisions", artist: "Recondite", release_rank: 7, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
+  { label: "Keinemusik", artist: "Rampa", release_rank: 1, release_count: 9, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
+  { label: "Keinemusik", artist: "Adam Port", release_rank: 2, release_count: 8, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
+  { label: "Keinemusik", artist: "&ME", release_rank: 3, release_count: 7, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
+  { label: "Keinemusik", artist: "David Mayer", release_rank: 4, release_count: 6, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
+  { label: "Keinemusik", artist: "Keinemusik", release_rank: 5, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
+  { label: "Keinemusik", artist: "&Me", release_rank: 6, release_count: 3, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
+  { label: "Keinemusik", artist: "Reznik & Mikesh", release_rank: 6, release_count: 3, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
+  { label: "Keinemusik", artist: "NR&", release_rank: 8, release_count: 2, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
+];
+
+const RELEASE_IMPACT = {
+  n: 16,
+  pearson_release_count_vs_collector_demand: 0.666,
+  pearson_release_count_vs_estimated_revenue: 0.841,
+  rows: [
+    { label: "Innervisions", artist: "Âme", release_count: 11, collector_demand_index: 16771, estimated_annual_live_revenue_usd: 3685500 },
+    { label: "Innervisions", artist: "Trikk", release_count: 6, collector_demand_index: 1635, estimated_annual_live_revenue_usd: 3685500 },
+    { label: "Innervisions", artist: "Frankey & Sandrino", release_count: 5, collector_demand_index: 4359, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Innervisions", artist: "Marcus Worgull", release_count: 5, collector_demand_index: 2674, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Innervisions", artist: "Tokyo Black Star", release_count: 5, collector_demand_index: 2944, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Innervisions", artist: "Toto Chiavetta", release_count: 5, collector_demand_index: 715, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Innervisions", artist: "Jimi Jules", release_count: 4, collector_demand_index: 859, estimated_annual_live_revenue_usd: 115500 },
+    { label: "Innervisions", artist: "Recondite", release_count: 4, collector_demand_index: 4555, estimated_annual_live_revenue_usd: 115500 },
+    { label: "Keinemusik", artist: "Rampa", release_count: 9, collector_demand_index: 2832, estimated_annual_live_revenue_usd: 3685500 },
+    { label: "Keinemusik", artist: "Adam Port", release_count: 8, collector_demand_index: 1994, estimated_annual_live_revenue_usd: 3685500 },
+    { label: "Keinemusik", artist: "&ME", release_count: 7, collector_demand_index: 2753, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Keinemusik", artist: "David Mayer", release_count: 6, collector_demand_index: 881, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Keinemusik", artist: "Keinemusik", release_count: 4, collector_demand_index: 2388, estimated_annual_live_revenue_usd: 115500 },
+    { label: "Keinemusik", artist: "&Me", release_count: 3, collector_demand_index: 1725, estimated_annual_live_revenue_usd: 115500 },
+    { label: "Keinemusik", artist: "Reznik & Mikesh", release_count: 3, collector_demand_index: 463, estimated_annual_live_revenue_usd: 115500 },
+    { label: "Keinemusik", artist: "NR&", release_count: 2, collector_demand_index: 298, estimated_annual_live_revenue_usd: 115500 },
+  ],
+};
