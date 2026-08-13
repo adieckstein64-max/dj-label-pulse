@@ -50,19 +50,18 @@ const TOP_ARTISTS = [
   { label: "Innervisions", artist: "Toto Chiavetta", release_count: 5, rnk: 3 },
   { label: "Innervisions", artist: "Jimi Jules", release_count: 4, rnk: 7 },
   { label: "Innervisions", artist: "Recondite", release_count: 4, rnk: 7 },
-  { label: "Keinemusik", artist: "Rampa", release_count: 9, rnk: 1 },
-  { label: "Keinemusik", artist: "Adam Port", release_count: 8, rnk: 2 },
-  { label: "Keinemusik", artist: "&ME", release_count: 7, rnk: 3 },
+  { label: "Keinemusik", artist: "&ME", release_count: 10, rnk: 1 },
+  { label: "Keinemusik", artist: "Rampa", release_count: 9, rnk: 2 },
+  { label: "Keinemusik", artist: "Adam Port", release_count: 8, rnk: 3 },
   { label: "Keinemusik", artist: "David Mayer", release_count: 6, rnk: 4 },
   { label: "Keinemusik", artist: "Keinemusik", release_count: 4, rnk: 5 },
-  { label: "Keinemusik", artist: "&Me", release_count: 3, rnk: 6 },
   { label: "Keinemusik", artist: "Reznik & Mikesh", release_count: 3, rnk: 6 },
-  { label: "Keinemusik", artist: "NR&", release_count: 2, rnk: 8 },
+  { label: "Keinemusik", artist: "NR&", release_count: 2, rnk: 7 },
 ];
 
 const SUMMARY = [
   { label: "Innervisions", total_releases: 148, first_year: 2005, latest_year: 2026, distinct_artists: 71, avg_releases_per_year: 6.73 },
-  { label: "Keinemusik", total_releases: 69, first_year: 2009, latest_year: 2026, distinct_artists: 31, avg_releases_per_year: 3.83 },
+  { label: "Keinemusik", total_releases: 69, first_year: 2009, latest_year: 2026, distinct_artists: 30, avg_releases_per_year: 3.83 },
 ];
 
 const LABEL_COLOR = { Innervisions: "#3b82f6", Keinemusik: "#f59e0b" };
@@ -218,7 +217,7 @@ export default function LabelPulseProject() {
             {SUMMARY.map((s) => (
               <Stat key={s.label} label={s.label} value={s.total_releases} sub={`${s.first_year}–${s.latest_year} · ${s.avg_releases_per_year}/yr avg`} />
             ))}
-            <Stat label="Distinct artists" value="71 / 31" sub="Innervisions / Keinemusik" />
+            <Stat label="Distinct artists" value="71 / 30" sub="Innervisions / Keinemusik" />
             <Stat label="Cross-label artist" value="Rampa" sub="Released on both rosters" />
           </div>
           <div>
@@ -263,7 +262,9 @@ export default function LabelPulseProject() {
             </div>
           </div>
           <div className="text-xs text-zinc-500">
-            <span className="text-teal-400">●</span> marks an artist called out on The Labels tab — Jimi Jules on Innervisions, and Rampa on Keinemusik (and, as it turns out, on Innervisions too).
+            <span className="text-teal-400">●</span> marks an artist called out on The Labels tab — Jimi Jules on Innervisions, and Rampa on Keinemusik (and, as it turns out, on Innervisions too). Note
+            <strong className="text-zinc-400"> &ME</strong> now leads Keinemusik's roster (10 releases) after merging a casing split in the source
+            data — see the Methodology tab.
           </div>
         </div>
       )}
@@ -279,7 +280,7 @@ export default function LabelPulseProject() {
             <div className="text-xs uppercase tracking-wide text-teal-400 font-medium mb-2">Found in the data, not assumed going in</div>
             <h3 className="text-base font-semibold text-zinc-100 mb-2">Rampa is the bridge between both labels</h3>
             <p className="text-sm text-zinc-400 leading-relaxed mb-3">
-              Rampa — Keinemusik co-founder and the label's single most prolific artist with 9 releases — also put out
+              Rampa — Keinemusik co-founder and the label's second most prolific artist with 9 releases — also put out
               two EPs directly on Innervisions: <em>Hall Of Violence EP</em> (2017) and <em>They Will EP</em> (2019). Two
               Berlin labels with almost no roster overlap, and the one artist who bridges them turns out to be a
               co-founder of one of them.
@@ -353,14 +354,14 @@ export default function LabelPulseProject() {
                   </div>
                 ))}
                 <div className="flex items-center gap-1.5 text-xs text-zinc-500">
-                  <span className="w-4 border-t border-dashed border-zinc-600" />trend (n=16)
+                  <span className="w-4 border-t border-dashed border-zinc-600" />trend (n=15)
                 </div>
               </div>
             </div>
             <p className="text-sm text-zinc-400 leading-relaxed mt-3">
-              Across the 16 top artists sampled: release count vs. real collector demand, <span className="text-zinc-200">r = 0.666</span>; release
-              count vs. modeled live revenue, <span className="text-zinc-200">r = 0.841</span>. Read both as directional at best —{" "}
-              <strong>n=16 is far too small for a real correlation claim</strong>, and the second number is partly circular by construction: the
+              Across the 15 top artists sampled: release count vs. real collector demand, <span className="text-zinc-200">r = 0.603</span>; release
+              count vs. modeled live revenue, <span className="text-zinc-200">r = 0.832</span>. Read both as directional at best —{" "}
+              <strong>n=15 is far too small for a real correlation claim</strong>, and the second number is partly circular by construction: the
               revenue model assigns touring tier directly from release rank, so a strong correlation there is baked into the model's assumptions,
               not an independent finding. The demand correlation is the more honest of the two, since it comes from an independent real data source —
               and even that one is a loose pattern in 16 points, not a result.
@@ -395,9 +396,12 @@ export default function LabelPulseProject() {
               number as a timeline.
             </p>
             <p>
-              The roster query also returns <strong>&amp;ME</strong> and <strong>&amp;Me</strong> as two separate
-              Keinemusik artists, 3 releases apart — a casing artifact in the source data, left visible on the Roster
-              tab rather than silently merged.
+              The source data originally split one Keinemusik artist across two casing variants —{" "}
+              <strong>&amp;ME</strong> and <strong>&amp;Me</strong> — even within the same catalog number: different
+              Discogs pressings of KM028, KM037, and KM046 each used a different casing for the identical release.
+              Caught and merged into one canonical <strong>&amp;ME</strong> (10 releases combined) in the source CSV,
+              which is what surfaces &amp;ME — not Rampa — as Keinemusik's most prolific artist. See "Extension
+              limitations" below for the query fix this merge required.
             </p>
           </div>
           <div>
@@ -463,8 +467,9 @@ export default function LabelPulseProject() {
           <div className="rounded-lg border border-amber-900/40 bg-amber-950/20 p-4">
             <div className="text-amber-400 font-medium mb-1">Extension limitations</div>
             <p className="mb-2">
-              <strong>Sample size:</strong> the demand/earnings analysis covers 16 top artists total (8 per label) — nowhere near
-              enough for the release-frequency correlations (r = 0.666 demand, r = 0.841 revenue) to mean anything statistically.
+              <strong>Sample size:</strong> the demand/earnings analysis covers 15 top artists total (8 Innervisions, 7
+              Keinemusik — Keinemusik dropped from 8 after merging the &amp;ME/&amp;Me split below) — nowhere near
+              enough for the release-frequency correlations (r = 0.603 demand, r = 0.832 revenue) to mean anything statistically.
               Treated as directional patterns to investigate further, never as findings.
             </p>
             <p className="mb-2">
@@ -478,6 +483,16 @@ export default function LabelPulseProject() {
               early version of the matching logic missed this and silently returned a demand index of 0 for that artist, which
               would have read as "nobody wants this" rather than "the string didn't match." Fixed by normalizing those markers
               before matching; leaving this note because a caught data bug is more useful here than pretending it didn't happen.
+            </p>
+            <p className="mt-2">
+              <strong>A second one, in the base release query:</strong> the same artist was split across two casings
+              ("&amp;ME" / "&amp;Me") in Discogs' raw feed — merging them in the source CSV made &amp;ME Keinemusik's
+              most prolific artist (10 releases) instead of Rampa (9), and dropped Keinemusik to 7 repeat artists.
+              That second change exposed a latent bug in the original query: <code className="text-zinc-500">RANK() ...
+              WHERE rnk &lt;= 8</code> ties every release_count=1 row for the same bottom rank, so a label with fewer
+              than 8 repeat artists spills the filter into every one-off collab credit tied at rank 8. Fixed with a{" "}
+              <code className="text-zinc-500">HAVING COUNT(*) &gt; 1</code> clause on the artist-count CTE, keeping this
+              a "prolific artist" ranking rather than a tie-break lottery.
             </p>
           </div>
           <div>
@@ -581,22 +596,21 @@ function ImpactScatter() {
 }
 
 const ENGAGEMENT = [
-  { label: "Innervisions", artist: "Âme", releases_sampled: 21, discogs_have_total: 9864, discogs_want_total: 6907, collector_demand_index: 16771 },
+  { label: "Innervisions", artist: "Âme", releases_sampled: 21, discogs_have_total: 9864, discogs_want_total: 6909, collector_demand_index: 16773 },
   { label: "Innervisions", artist: "Recondite", releases_sampled: 5, discogs_have_total: 2450, discogs_want_total: 2105, collector_demand_index: 4555 },
   { label: "Innervisions", artist: "Frankey & Sandrino", releases_sampled: 10, discogs_have_total: 2490, discogs_want_total: 1869, collector_demand_index: 4359 },
   { label: "Innervisions", artist: "Trikk", releases_sampled: 14, discogs_have_total: 965, discogs_want_total: 670, collector_demand_index: 1635 },
   { label: "Innervisions", artist: "Marcus Worgull", releases_sampled: 5, discogs_have_total: 1883, discogs_want_total: 791, collector_demand_index: 2674 },
   { label: "Innervisions", artist: "Toto Chiavetta", releases_sampled: 5, discogs_have_total: 510, discogs_want_total: 205, collector_demand_index: 715 },
   { label: "Innervisions", artist: "Jimi Jules", releases_sampled: 11, discogs_have_total: 566, discogs_want_total: 293, collector_demand_index: 859 },
-  { label: "Innervisions", artist: "Tokyo Black Star", releases_sampled: 8, discogs_have_total: 2157, discogs_want_total: 787, collector_demand_index: 2944 },
-  { label: "Keinemusik", artist: "&ME", releases_sampled: 9, discogs_have_total: 1869, discogs_want_total: 884, collector_demand_index: 2753 },
+  { label: "Innervisions", artist: "Tokyo Black Star", releases_sampled: 8, discogs_have_total: 2157, discogs_want_total: 788, collector_demand_index: 2945 },
+  { label: "Keinemusik", artist: "&ME", releases_sampled: 10, discogs_have_total: 1871, discogs_want_total: 885, collector_demand_index: 2756 },
   { label: "Keinemusik", artist: "Rampa", releases_sampled: 10, discogs_have_total: 1888, discogs_want_total: 944, collector_demand_index: 2832 },
   { label: "Keinemusik", artist: "Adam Port", releases_sampled: 8, discogs_have_total: 1177, discogs_want_total: 817, collector_demand_index: 1994 },
   { label: "Keinemusik", artist: "David Mayer", releases_sampled: 7, discogs_have_total: 691, discogs_want_total: 190, collector_demand_index: 881 },
   { label: "Keinemusik", artist: "NR&", releases_sampled: 2, discogs_have_total: 223, discogs_want_total: 75, collector_demand_index: 298 },
-  { label: "Keinemusik", artist: "&Me", releases_sampled: 4, discogs_have_total: 1077, discogs_want_total: 648, collector_demand_index: 1725 },
   { label: "Keinemusik", artist: "Keinemusik", releases_sampled: 5, discogs_have_total: 1419, discogs_want_total: 969, collector_demand_index: 2388 },
-  { label: "Keinemusik", artist: "Reznik & Mikesh", releases_sampled: 3, discogs_have_total: 376, discogs_want_total: 87, collector_demand_index: 463 },
+  { label: "Keinemusik", artist: "Reznik & Mikesh", releases_sampled: 3, discogs_have_total: 252, discogs_want_total: 71, collector_demand_index: 323 },
 ];
 
 const TOURING_TIERS = {
@@ -614,36 +628,34 @@ const EARNINGS_ESTIMATE = [
   { label: "Innervisions", artist: "Toto Chiavetta", release_rank: 3, release_count: 5, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
   { label: "Innervisions", artist: "Jimi Jules", release_rank: 7, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
   { label: "Innervisions", artist: "Recondite", release_rank: 7, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Keinemusik", artist: "Rampa", release_rank: 1, release_count: 9, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
-  { label: "Keinemusik", artist: "Adam Port", release_rank: 2, release_count: 8, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
-  { label: "Keinemusik", artist: "&ME", release_rank: 3, release_count: 7, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
+  { label: "Keinemusik", artist: "&ME", release_rank: 1, release_count: 10, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
+  { label: "Keinemusik", artist: "Rampa", release_rank: 2, release_count: 9, touring_tier: "A", estimated_annual_live_revenue_usd: 3685500 },
+  { label: "Keinemusik", artist: "Adam Port", release_rank: 3, release_count: 8, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
   { label: "Keinemusik", artist: "David Mayer", release_rank: 4, release_count: 6, touring_tier: "B", estimated_annual_live_revenue_usd: 810000 },
   { label: "Keinemusik", artist: "Keinemusik", release_rank: 5, release_count: 4, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Keinemusik", artist: "&Me", release_rank: 6, release_count: 3, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
   { label: "Keinemusik", artist: "Reznik & Mikesh", release_rank: 6, release_count: 3, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
-  { label: "Keinemusik", artist: "NR&", release_rank: 8, release_count: 2, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
+  { label: "Keinemusik", artist: "NR&", release_rank: 7, release_count: 2, touring_tier: "C", estimated_annual_live_revenue_usd: 115500 },
 ];
 
 const RELEASE_IMPACT = {
-  n: 16,
-  pearson_release_count_vs_collector_demand: 0.666,
-  pearson_release_count_vs_estimated_revenue: 0.841,
+  n: 15,
+  pearson_release_count_vs_collector_demand: 0.603,
+  pearson_release_count_vs_estimated_revenue: 0.832,
   rows: [
-    { label: "Innervisions", artist: "Âme", release_count: 11, collector_demand_index: 16771, estimated_annual_live_revenue_usd: 3685500 },
+    { label: "Innervisions", artist: "Âme", release_count: 11, collector_demand_index: 16773, estimated_annual_live_revenue_usd: 3685500 },
     { label: "Innervisions", artist: "Trikk", release_count: 6, collector_demand_index: 1635, estimated_annual_live_revenue_usd: 3685500 },
     { label: "Innervisions", artist: "Frankey & Sandrino", release_count: 5, collector_demand_index: 4359, estimated_annual_live_revenue_usd: 810000 },
     { label: "Innervisions", artist: "Marcus Worgull", release_count: 5, collector_demand_index: 2674, estimated_annual_live_revenue_usd: 810000 },
-    { label: "Innervisions", artist: "Tokyo Black Star", release_count: 5, collector_demand_index: 2944, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Innervisions", artist: "Tokyo Black Star", release_count: 5, collector_demand_index: 2945, estimated_annual_live_revenue_usd: 810000 },
     { label: "Innervisions", artist: "Toto Chiavetta", release_count: 5, collector_demand_index: 715, estimated_annual_live_revenue_usd: 810000 },
     { label: "Innervisions", artist: "Jimi Jules", release_count: 4, collector_demand_index: 859, estimated_annual_live_revenue_usd: 115500 },
     { label: "Innervisions", artist: "Recondite", release_count: 4, collector_demand_index: 4555, estimated_annual_live_revenue_usd: 115500 },
+    { label: "Keinemusik", artist: "&ME", release_count: 10, collector_demand_index: 2756, estimated_annual_live_revenue_usd: 3685500 },
     { label: "Keinemusik", artist: "Rampa", release_count: 9, collector_demand_index: 2832, estimated_annual_live_revenue_usd: 3685500 },
-    { label: "Keinemusik", artist: "Adam Port", release_count: 8, collector_demand_index: 1994, estimated_annual_live_revenue_usd: 3685500 },
-    { label: "Keinemusik", artist: "&ME", release_count: 7, collector_demand_index: 2753, estimated_annual_live_revenue_usd: 810000 },
+    { label: "Keinemusik", artist: "Adam Port", release_count: 8, collector_demand_index: 1994, estimated_annual_live_revenue_usd: 810000 },
     { label: "Keinemusik", artist: "David Mayer", release_count: 6, collector_demand_index: 881, estimated_annual_live_revenue_usd: 810000 },
     { label: "Keinemusik", artist: "Keinemusik", release_count: 4, collector_demand_index: 2388, estimated_annual_live_revenue_usd: 115500 },
-    { label: "Keinemusik", artist: "&Me", release_count: 3, collector_demand_index: 1725, estimated_annual_live_revenue_usd: 115500 },
-    { label: "Keinemusik", artist: "Reznik & Mikesh", release_count: 3, collector_demand_index: 463, estimated_annual_live_revenue_usd: 115500 },
+    { label: "Keinemusik", artist: "Reznik & Mikesh", release_count: 3, collector_demand_index: 323, estimated_annual_live_revenue_usd: 115500 },
     { label: "Keinemusik", artist: "NR&", release_count: 2, collector_demand_index: 298, estimated_annual_live_revenue_usd: 115500 },
   ],
 };

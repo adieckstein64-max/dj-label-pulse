@@ -4,7 +4,7 @@
       "label": "Innervisions",
       "artist": "\u00c2me",
       "release_count": 11,
-      "collector_demand_index": 16771,
+      "collector_demand_index": 16773,
       "estimated_annual_live_revenue_usd": 3685500
     },
     {
@@ -32,7 +32,7 @@
       "label": "Innervisions",
       "artist": "Tokyo Black Star",
       "release_count": 5,
-      "collector_demand_index": 2944,
+      "collector_demand_index": 2945,
       "estimated_annual_live_revenue_usd": 810000
     },
     {
@@ -58,6 +58,13 @@
     },
     {
       "label": "Keinemusik",
+      "artist": "&ME",
+      "release_count": 10,
+      "collector_demand_index": 2756,
+      "estimated_annual_live_revenue_usd": 3685500
+    },
+    {
+      "label": "Keinemusik",
       "artist": "Rampa",
       "release_count": 9,
       "collector_demand_index": 2832,
@@ -68,13 +75,6 @@
       "artist": "Adam Port",
       "release_count": 8,
       "collector_demand_index": 1994,
-      "estimated_annual_live_revenue_usd": 3685500
-    },
-    {
-      "label": "Keinemusik",
-      "artist": "&ME",
-      "release_count": 7,
-      "collector_demand_index": 2753,
       "estimated_annual_live_revenue_usd": 810000
     },
     {
@@ -93,16 +93,9 @@
     },
     {
       "label": "Keinemusik",
-      "artist": "&Me",
-      "release_count": 3,
-      "collector_demand_index": 1725,
-      "estimated_annual_live_revenue_usd": 115500
-    },
-    {
-      "label": "Keinemusik",
       "artist": "Reznik & Mikesh",
       "release_count": 3,
-      "collector_demand_index": 463,
+      "collector_demand_index": 323,
       "estimated_annual_live_revenue_usd": 115500
     },
     {
@@ -113,8 +106,8 @@
       "estimated_annual_live_revenue_usd": 115500
     }
   ],
-  "n": 16,
-  "pearson_release_count_vs_collector_demand": 0.666,
-  "pearson_release_count_vs_estimated_revenue": 0.841,
-  "note": "n=16 (top artists across both labels) is far too small for a statistically meaningful correlation -- these coefficients describe this specific sample, not a general claim about release frequency and demand/earnings. Read as a directional pattern to look into further, not a finding."
+  "n": 15,
+  "pearson_release_count_vs_collector_demand": 0.603,
+  "pearson_release_count_vs_estimated_revenue": 0.832,
+  "note": "n=15 (top artists across both labels) is far too small for a statistically meaningful correlation -- these coefficients describe this specific sample, not a general claim about release frequency and demand/earnings. Read as a directional pattern to look into further, not a finding."
 }

@@ -50,12 +50,19 @@ with open("label_pulse_cadence.json", "w") as f:
     json.dump(cadence, f, indent=2)
 
 # --- Query 2: most prolific artist per label (RANK window function) ---
+# HAVING COUNT(*) > 1 keeps this a "prolific artist" ranking, not a tie-break
+# lottery: RANK() leaves every release_count=1 row tied for the same rank, and
+# a label with fewer than 8 repeat artists would otherwise spill "rnk <= 8"
+# into dozens of one-off collab credits (exposed after merging &ME/&Me below
+# a label's repeat-artist count, which dropped Keinemusik from exactly 8 to 7
+# real repeat artists).
 cur.execute("""
 WITH artist_counts AS (
     SELECT label, artist, COUNT(*) AS release_count
     FROM releases
     WHERE artist NOT IN ('Various', 'Unknown Artist')
     GROUP BY label, artist
+    HAVING COUNT(*) > 1
 ),
 ranked AS (
     SELECT *, RANK() OVER (PARTITION BY label ORDER BY release_count DESC) AS rnk

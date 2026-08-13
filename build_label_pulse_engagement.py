@@ -193,9 +193,9 @@ with open("label_pulse_release_impact.json", "w") as f:
         "n": len(combined),
         "pearson_release_count_vs_collector_demand": corr_demand,
         "pearson_release_count_vs_estimated_revenue": corr_revenue,
-        "note": "n=16 (top artists across both labels) is far too small for a statistically meaningful "
-                "correlation -- these coefficients describe this specific sample, not a general claim about "
-                "release frequency and demand/earnings. Read as a directional pattern to look into further, "
+        "note": f"n={len(combined)} (top artists across both labels) is far too small for a statistically "
+                "meaningful correlation -- these coefficients describe this specific sample, not a general claim "
+                "about release frequency and demand/earnings. Read as a directional pattern to look into further, "
                 "not a finding.",
     }, f, indent=2)
 

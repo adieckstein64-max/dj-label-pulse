@@ -33,11 +33,11 @@ Output: `label_pulse_cadence.json`, `label_pulse_top_artists.json`, `label_pulse
 ## Headline results
 
 - Innervisions: 148 releases, 71 distinct artists, 6.73 releases/year average, peaked at 12 releases in 2014.
-- Keinemusik: 69 releases, 31 distinct artists, 3.83 releases/year average, steadier cadence (3-5/year most years).
-- Most prolific: Âme (11 releases) on Innervisions; Rampa (9 releases) on Keinemusik.
-- Cross-label overlap: **Rampa** (Keinemusik co-founder) has also released directly on Innervisions
-  ("Hall Of Violence EP," 2017; "They Will EP," 2019) — a real, verifiable example of overlap between
-  the two labels' rosters, found in the data rather than assumed going in.
+- Keinemusik: 69 releases, 30 distinct artists, 3.83 releases/year average, steadier cadence (3-5/year most years).
+- Most prolific: Âme (11 releases) on Innervisions; **&ME** (10 releases) on Keinemusik.
+- Cross-label overlap: **Rampa** (Keinemusik co-founder, 9 releases, Keinemusik's 2nd most prolific artist) has
+  also released directly on Innervisions ("Hall Of Violence EP," 2017; "They Will EP," 2019) — a real, verifiable
+  example of overlap between the two labels' rosters, found in the data rather than assumed going in.
 
 ## Honest limitations
 
@@ -47,6 +47,15 @@ release counts is a data-cutoff artifact, not a real slowdown, and is flagged as
 left to imply a trend the data can't support. Catalog numbers on Innervisions are not strictly
 chronological (e.g. IV109 is dated 2026 despite being numbered before IV110-116, which are dated
 2024-2025) — noted so the year-based analysis isn't mistaken for a catalog-number timeline.
+
+Discogs' raw feed also had **&ME** entered inconsistently — even different pressings of the *same*
+catalog number (e.g. KM037, KM028) alternated between "&ME" and "&Me." Originally treated as two
+separate artists (7 releases + 3 releases) until caught and merged into one canonical "&ME" (10
+releases) in the source CSV, which is what surfaced &ME as Keinemusik's most prolific artist rather
+than Rampa. The prolific-artist query also got a `HAVING COUNT(*) > 1` fix as a result: without it,
+`RANK() OVER (...) WHERE rnk <= 8` ties every one-off collab credit for the same bottom rank whenever
+a label has fewer than 8 repeat artists — Keinemusik dropped to 7 after the merge, which would have
+flooded the roster with single-release features had the query not been corrected.
 
 ## Deliverable
 
