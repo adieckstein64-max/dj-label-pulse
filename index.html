@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Label Pulse — Innervisions vs. Keinemusik</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html, body { margin: 0; background: #09090b; }
+  #root { min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 32px 16px; box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div style="color:#a1a1aa;font-family:system-ui, sans-serif;padding:40px;">Loading…</div>
+</div>
+<script>
+  fetch('./LabelPulseProject.jsx?_=' + Date.now())
+    .then(function (r) { return r.text(); })
+    .then(function (src) {
+      var cleaned = src
+        .replace(/import\s*\{[^}]*\}\s*from\s*["']react["'];?/, '')
+        .replace(/export\s+default\s+function/, 'function');
+      var runnable = cleaned + '\n;window.__LabelPulseProject = LabelPulseProject;';
+      var out = Babel.transform(runnable, { presets: ['react'] }).code;
+      var useState = React.useState;
+      var useMemo = React.useMemo;
+      new Function('React', 'useState', 'useMemo', out)(React, useState, useMemo);
+      var root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(React.createElement(window.__LabelPulseProject));
+    })
+    .catch(function (err) {
+      document.getElementById('root').innerHTML =
+        '<div style="color:#f87171;font-family:system-ui, sans-serif;padding:40px;max-width:600px;">Failed to load LabelPulseProject.jsx: ' +
+        err.message + '</div>';
+      console.error(err);
+    });
+</script>
+</body>
+</html>
